@@ -30,44 +30,28 @@ def markdown_to_html_node(markdown):
 
         if block_type == BlockType.PARAGRAPH:
             formatted_lines = block.replace("\n", " ")
-            if len(text_to_textnodes(formatted_lines)) == 1:
-                node_list.append(LeafNode("p", formatted_lines))
-                continue
-            else:
-                child_nodes = text_to_children(formatted_lines)
-                node_list.append(ParentNode(tag="p", children=child_nodes))
+            child_nodes = text_to_children(formatted_lines)
+            node_list.append(ParentNode(tag="p", children=child_nodes))
         if block_type == BlockType.QUOTE:
             formatted_lines = ""
             for line in lines:
-                formatted_lines += line.split(" ", 1)[1]
-            if len(text_to_textnodes(formatted_lines)) == 1:
-                node_list.append(LeafNode("blockquote", formatted_lines))
-                continue
-            else:
-                child_nodes = text_to_children(formatted_lines)
-                node_list.append(ParentNode(tag="blockquote", children=child_nodes))
+                formatted_lines += line[1:].strip()
+
+            child_nodes = text_to_children(formatted_lines)
+            node_list.append(ParentNode(tag="blockquote", children=child_nodes))
         if block_type == BlockType.UNORDERED_LIST:
             formatted_lines = ""
             for line in lines:
-                formatted_lines += f"<li>{line.split(' ', 1)}</li>"
+                formatted_lines += f"<li>{line[1:].strip()}</li>"
 
-            if len(text_to_textnodes(formatted_lines)) == 1:
-                node_list.append(LeafNode("ul", formatted_lines))
-                continue
-            else:
-                child_nodes = text_to_children(formatted_lines)
-                node_list.append(ParentNode(tag="ul", children=child_nodes))
+            child_nodes = text_to_children(formatted_lines)
+            node_list.append(ParentNode(tag="ul", children=child_nodes))
         if block_type == BlockType.ORDERED_LIST:
             formatted_lines = ""
             for line in lines:
-                formatted_lines += f"<li>{line.split(' ', 1)}</li>"
-
-            if len(text_to_textnodes(formatted_lines)) == 1:
-                node_list.append(LeafNode("ol", formatted_lines))
-                continue
-            else:
-                child_nodes = text_to_children(formatted_lines)
-                node_list.append(ParentNode(tag="ol", children=child_nodes))
+                formatted_lines += f"<li>{line[2:].strip()}</li>"
+            child_nodes = text_to_children(formatted_lines)
+            node_list.append(ParentNode(tag="ol", children=child_nodes))
         if block_type == BlockType.CODE:
             formatted_line = f"<code>{block[4:-3]}</code>"
             node_list.append(LeafNode("pre", formatted_line))
@@ -79,13 +63,7 @@ def markdown_to_html_node(markdown):
             for line in lines:
                 formatted_lines += line.split(" ", 1)[1]
 
-            if len(text_to_textnodes(formatted_lines)) == 1:
-                node_list.append(LeafNode(f"h{heading_level}", formatted_lines))
-                continue
-            else:
-                child_nodes = text_to_children(formatted_lines)
-                node_list.append(
-                    ParentNode(tag=f"h{heading_level}", children=child_nodes)
-                )
+            child_nodes = text_to_children(formatted_lines)
+            node_list.append(ParentNode(tag=f"h{heading_level}", children=child_nodes))
 
     return ParentNode(tag="div", children=node_list)
