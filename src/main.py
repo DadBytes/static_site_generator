@@ -1,19 +1,34 @@
-from replicate_folder import clean_folders, replicate_folder
+from replicate_folder import remove_folders, replicate_folder
 from generate_webpage import generate_pages_recursive
+
+import sys
+
+
+static_dir = "./static"
+public_dir = "./public"
+content_dir = "./content"
+template_path = "./template.html"
 
 
 def main():
-    folder_to_replicate = "static"
-    folder_to_clean = "public"
+    if len(sys.argv) == 1:
+        basepath = "/"
+    else:
+        basepath = sys.argv[1]
 
     print("Deleting public directory...")
-    clean_folders(folder_to_clean)
+    remove_folders(public_dir)
 
     print("Copying static files to public directory...")
-    replicate_folder(folder_to_replicate, folder_to_clean)
+    replicate_folder(static_dir, public_dir)
 
     print("Generating webpage...")
-    generate_pages_recursive("content", "template.html", "public")
+    generate_pages_recursive(
+        basepath,
+        content_dir,
+        template_path,
+        public_dir,
+    )
 
 
 main()
