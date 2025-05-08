@@ -5,7 +5,7 @@ import sys
 
 
 static_dir = "./static"
-public_dir = "./public"
+docs_dir = "./docs"
 content_dir = "./content"
 template_path = "./template.html"
 
@@ -17,17 +17,17 @@ def main():
         basepath = sys.argv[1]
 
     print("Deleting public directory...")
-    remove_folders(public_dir)
+    remove_folders(docs_dir)
 
     print("Copying static files to public directory...")
-    replicate_folder(static_dir, public_dir)
+    replicate_folder(static_dir, docs_dir)
 
     print("Generating webpage...")
     generate_pages_recursive(
         basepath,
         content_dir,
         template_path,
-        public_dir,
+        docs_dir,
     )
 
 
